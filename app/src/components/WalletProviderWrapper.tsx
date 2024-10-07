@@ -10,7 +10,7 @@ import { useMemo } from 'react';
 
 import '@solana/wallet-adapter-react-ui/styles.css';
 
-export const WalletProviderWrapper = ({ children }) => {
+export const WalletProviderWrapper = ({ children }:{children:React.ReactNode}) => {
   const network = WalletAdapterNetwork.Devnet;
   const endpoint = useMemo(() => clusterApiUrl(network), [network]);
 

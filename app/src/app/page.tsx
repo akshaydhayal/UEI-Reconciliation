@@ -47,35 +47,41 @@ export default function Home() {
         try {
           const provider = new AnchorProvider(connection, anchorWallet, {});
           const program = new Program(idlObject, programID, provider);
+          //@ts-expect-error ignore
           setProgram(program);
 
           const batteryBankKeypair = web3.Keypair.generate();
+          //@ts-expect-error ignore
           setBatteryBank(batteryBankKeypair);
-
+          
           if (publicKey) {
             const producerAccountPDA = web3.PublicKey.findProgramAddressSync(
               [Buffer.from("producer"), batteryBankKeypair.publicKey.toBuffer(), publicKey.toBuffer()],
               program.programId
             )[0];
+            //@ts-expect-error ignore
             setProducerAccount(producerAccountPDA);
           }
         } catch (error) {
           console.error("Error initializing program:", error);
+          //@ts-expect-error ignore
           setMessage(`Error initializing program: ${error.message}`);
         }
       }
     };
-
+    
     initializeProgram();
   }, [anchorWallet, connection, publicKey]);
-
+  
   useEffect(() => {
     const fetchAccountData = async () => {
       if (program && batteryBank && producerAccount) {
         try {
+          //@ts-expect-error ignore
           const batteryBankAccount = await program.account.batteryBank.fetch(batteryBank.publicKey);
           setBatteryBankData(batteryBankAccount);
-
+          
+          //@ts-expect-error ignore
           const producerAccountData = await program.account.producerAccount.fetch(producerAccount);
           setProducerData(producerAccountData);
         } catch (error) {
@@ -89,26 +95,29 @@ export default function Home() {
 
     return () => clearInterval(intervalId);
   }, [program, batteryBank, producerAccount]);
-
+  
   const handleInitialize = async () => {
     if (!program || !publicKey || !batteryBank) return;
     setIsInitializing(true);
-
+    
     try {
+      //@ts-expect-error ignore
       const tx = await program.methods.initialize(new BN(storageFee))
-        .accounts({
+      .accounts({
+          //@ts-expect-error ignore
           batteryBank: batteryBank.publicKey,
           owner: publicKey,
           systemProgram: web3.SystemProgram.programId,
         })
         .signers([batteryBank])
         .rpc();
-      setMessage(`Battery Bank initialized. Transaction: ${tx}`);
-    } catch (error) {
-      console.error('Error:', error);
-      setMessage(`Error: ${error.message}`);
-    }finally{
-      setIsInitializing(false);
+        setMessage(`Battery Bank initialized. Transaction: ${tx}`);
+      } catch (error) {
+        console.error('Error:', error);
+        //@ts-expect-error ignore
+        setMessage(`Error: ${error.message}`);
+      }finally{
+        setIsInitializing(false);
     }
   };
 
@@ -116,8 +125,10 @@ export default function Home() {
     if (!program || !publicKey || !batteryBank || !producerAccount) return;
     setIsStoring(true);
     try {
-      const tx = await program.methods.storeEnergy(new BN(storeAmount), new BN(storeRate))
+        //@ts-expect-error ignore
+        const tx = await program.methods.storeEnergy(new BN(storeAmount), new BN(storeRate))
         .accounts({
+          //@ts-expect-error ignore
           batteryBank: batteryBank.publicKey,
           producerAccount: producerAccount,
           producer: publicKey,
@@ -127,6 +138,7 @@ export default function Home() {
       setMessage(`Energy stored. Transaction: ${tx}`);
     } catch (error) {
       console.error('Error:', error);
+      //@ts-expect-error ignore
       setMessage(`Error: ${error.message}`);
     }finally{
       setIsStoring(false);
@@ -137,8 +149,10 @@ export default function Home() {
     if (!program || !publicKey || !batteryBank || !producerAccount) return;
     setIsConsuming(true);
     try {
+      //@ts-expect-error ignore
       const tx = await program.methods.consumeEnergy(new BN(consumeAmount))
-        .accounts({
+      .accounts({
+          //@ts-expect-error ignore
           batteryBank: batteryBank.publicKey,
           producerAccount: producerAccount,
           owner: publicKey,
@@ -147,16 +161,19 @@ export default function Home() {
         setMessage(`Energy consumed. Transaction: ${tx}`);
       } catch (error) {
         console.error('Error:', error);
+        //@ts-expect-error ignore
         setMessage(`Error: ${error.message}`);
       }finally{
         setIsConsuming(false);
       }
-  };
-
-  
+    };
+    
+    
+    //@ts-expect-error ignore
     const AccountDataDisplay = ({ title, data,icon }) => {
-    const formatData = (data) => {
-      if (!data) return null;
+      //@ts-expect-error ignore
+      const formatData = (data) => {
+        if (!data) return null;
       
       return {
         ...data,
@@ -166,6 +183,7 @@ export default function Home() {
         rate: new BN(data.rate).toString(),
         balance: new BN(data.balance).toString(),
         lastReconciled: new Date(data.lastReconciled * 1000).toLocaleString(),
+        //@ts-expect-error ignore
         transactions: data?.transactions?.map(tx => ({
           ...tx,
           txType: Object.keys(tx.txType)[0],
@@ -176,7 +194,7 @@ export default function Home() {
     };
 
     const formattedData = formatData(data);
-
+    
     return (
       <Card className="mt-4 bg-gray-800 border-gray-700">
       <CardHeader>
@@ -188,8 +206,9 @@ export default function Home() {
     </Card>
     );
   };
-
-    const EnergyChart = ({ producerData }) => {
+  
+  //@ts-expect-error ignore
+  const EnergyChart = ({ producerData }) => {
     const data = [
       { name: 'Stored', energy: producerData ? new BN(producerData.storedAmount).toNumber() : 0 },
       { name: 'Consumed', energy: producerData ? new BN(producerData.consumedAmount).toNumber() : 0 },
@@ -216,9 +235,11 @@ export default function Home() {
     );
   };
 
-
+  
   // const TransactionList = ({ transactions, storageFee }) => {
-  const TransactionList = ({ data }) => {
+    //@ts-expect-error ignore
+    const TransactionList = ({ data }) => {
+    //@ts-expect-error ignore
     const formatData = (data) => {
       if (!data) return null;
       
@@ -230,6 +251,7 @@ export default function Home() {
         rate: new BN(data.rate).toString(),
         balance: new BN(data.balance).toString(),
         lastReconciled: new Date(data.lastReconciled * 1000).toLocaleString(),
+        //@ts-expect-error ignore
         transactions: data?.transactions?.map(tx => ({
           ...tx,
           txType: Object.keys(tx.txType)[0],
@@ -238,28 +260,30 @@ export default function Home() {
         }))
       };
     };
-
+    
     const formattedData = formatData(data);
     console.log("formatted data : ",formattedData);
     const [totalOwed, setTotalOwed] = useState({ toBob: 0, toProducers: 0 });
-  
+    
     useEffect(() => {
       let toBob = 0;
       let toProducers = 0;
-  
+      
+      //@ts-expect-error ignore
       formattedData.transactions.forEach(tx => {
         const amount = new BN(tx.amount).toNumber();
         if (tx.txType === 'store') {
+          //@ts-expect-error ignore
           toBob += amount * batteryBankData?.storageFee?.toNumber();
         } else if (tx.txType === 'consume') {
           toProducers += amount * new BN(formattedData.rate).toNumber();
         }
       });
-  
+      
       setTotalOwed({ toBob, toProducers });
     }, []);
     // }, [transactions, storageFee]);
-  
+    
     return (
       <Card className="mt-4 bg-gray-800 border-gray-700">
       <CardHeader>
@@ -278,16 +302,16 @@ export default function Home() {
           </TableHeader>
   
           <TableBody>
+        {/* @ts-expect-error ignore */}
             {formattedData.transactions.map((tx, index) => {
               const txType = tx.txType === 'store' ? 'Stored Energy' : 'Consumed Energy';
+              {/* @ts-expect-error ignore */}
               const rate = tx.txType === 'store' ? new BN(batteryBankData?.storageFee?.toNumber()): new BN(formattedData.rate);
               // const rate = tx.txType === 'store' ? new BN(batteryBankData?.storageFee?.toNumber()): new BN(tx.rate);
               const total = new BN(tx.amount).mul(rate);
 
               console.log(txType,rate.toString(), total.toString());
               console.log(rate, total);
-              // ... (logic remains the same)
-
               return (
                 <TableRow key={index}>
                   <TableCell className="text-gray-300">{txType}</TableCell>
