@@ -1,73 +1,23 @@
-// "use client";
-// import Header from "@/components/Header";
-// // app/layout.tsx
-// import WalletConnectProvider from "../components/WalletProvider";
-// import "./globals.css";
-// import { useState } from "react";
+// app/layout.js
+import { Inter } from 'next/font/google'
+import './globals.css'
+import { WalletProviderWrapper } from '../components/WalletProviderWrapper'
 
-// export default function RootLayout({ children }: { children: React.ReactNode }) {
-//   return (
-//     <html lang="en">
-//       <body>
-//         <WalletConnectProvider>
-//                 <Header />
-//             <main className="p-4">{children}</main>
-//         </WalletConnectProvider>
-//       </body>
-//     </html>
-//   );
-// }
+const inter = Inter({ subsets: ['latin'] })
 
-
-
-
-
-
-// // File: app/layout.tsx
-'use client';
-
-import React, { useMemo } from 'react';
-import { WalletAdapterNetwork } from '@solana/wallet-adapter-base';
-import {ConnectionProvider,WalletProvider} from '@solana/wallet-adapter-react';
-import {WalletModalProvider, WalletMultiButton} from '@solana/wallet-adapter-react-ui';
-import { PhantomWalletAdapter } from '@solana/wallet-adapter-wallets';
-import { clusterApiUrl } from '@solana/web3.js';
-import type { ReactNode } from 'react';
-
-// Import global styles
-import '@solana/wallet-adapter-react-ui/styles.css';
-
-interface LayoutProps {
-    children: ReactNode;
+export const metadata = {
+  title: 'Energy Storage Smart Contract',
+  description: 'UI for interacting with the Energy Storage Smart Contract on Solana',
 }
 
-const Layout: React.FC<LayoutProps> = ({ children }) => {
-    const network = WalletAdapterNetwork.Devnet;
-    const endpoint = useMemo(() => clusterApiUrl(network), [network]);
-
-    const wallets = useMemo(
-        () => [
-            new PhantomWalletAdapter(),
-            // You can add more wallet adapters here
-            // e.g., new SolflareWalletAdapter(), new SlopeWalletAdapter(), etc.
-        ],
-        []
-    );
-
-    return (
-          <html lang="en">
-            <body>
-              {/* {children} */}
-              <ConnectionProvider endpoint={endpoint}>
-                  <WalletProvider wallets={wallets} autoConnect>
-                      <WalletModalProvider>
-                          {children}
-                      </WalletModalProvider>
-                  </WalletProvider>
-              </ConnectionProvider>
-            </body>
+export default function RootLayout({ children }) {
+  return (
+    <html lang="en">
+      <body className={inter.className}>
+        <WalletProviderWrapper>
+          {children}
+        </WalletProviderWrapper>
+      </body>
     </html>
-    );
-};
-
-export default Layout;
+  )
+}

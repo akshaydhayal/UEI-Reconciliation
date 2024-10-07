@@ -1,0 +1,278 @@
+{
+  "address": "9mWe7CADyTP9PCKqqj6j8s25ryiFPYxD2FJerEibyWxe",
+  "metadata": {
+    "name": "energy_storage",
+    "version": "0.1.0",
+    "spec": "0.1.0",
+    "description": "Created with Anchor"
+  },
+  "instructions": [
+    {
+      "name": "consume_energy",
+      "discriminator": [
+        72,
+        209,
+        198,
+        132,
+        177,
+        231,
+        77,
+        117
+      ],
+      "accounts": [
+        {
+          "name": "battery_bank"
+        },
+        {
+          "name": "producer_account",
+          "writable": true
+        },
+        {
+          "name": "owner",
+          "writable": true,
+          "signer": true
+        }
+      ],
+      "args": [
+        {
+          "name": "amount",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "initialize",
+      "discriminator": [
+        175,
+        175,
+        109,
+        31,
+        13,
+        152,
+        155,
+        237
+      ],
+      "accounts": [
+        {
+          "name": "battery_bank",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "owner",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "storage_fee",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "store_energy",
+      "discriminator": [
+        121,
+        178,
+        153,
+        98,
+        90,
+        131,
+        104,
+        166
+      ],
+      "accounts": [
+        {
+          "name": "battery_bank"
+        },
+        {
+          "name": "producer_account",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  114,
+                  111,
+                  100,
+                  117,
+                  99,
+                  101,
+                  114
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "battery_bank"
+              },
+              {
+                "kind": "account",
+                "path": "producer"
+              }
+            ]
+          }
+        },
+        {
+          "name": "producer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "amount",
+          "type": "u64"
+        },
+        {
+          "name": "rate",
+          "type": "u64"
+        }
+      ]
+    }
+  ],
+  "accounts": [
+    {
+      "name": "BatteryBank",
+      "discriminator": [
+        27,
+        192,
+        196,
+        151,
+        246,
+        173,
+        182,
+        157
+      ]
+    },
+    {
+      "name": "ProducerAccount",
+      "discriminator": [
+        157,
+        130,
+        169,
+        90,
+        169,
+        93,
+        143,
+        218
+      ]
+    }
+  ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "InsufficientEnergy",
+      "msg": "Insufficient energy stored"
+    }
+  ],
+  "types": [
+    {
+      "name": "BatteryBank",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "owner",
+            "type": "pubkey"
+          },
+          {
+            "name": "storage_fee",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "ProducerAccount",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "producer",
+            "type": "pubkey"
+          },
+          {
+            "name": "stored_amount",
+            "type": "u64"
+          },
+          {
+            "name": "consumed_amount",
+            "type": "u64"
+          },
+          {
+            "name": "rate",
+            "type": "u64"
+          },
+          {
+            "name": "balance",
+            "type": "i64"
+          },
+          {
+            "name": "last_reconciled",
+            "type": "i64"
+          },
+          {
+            "name": "transactions",
+            "type": {
+              "vec": {
+                "defined": {
+                  "name": "Transaction"
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "Transaction",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "tx_type",
+            "type": {
+              "defined": {
+                "name": "TransactionType"
+              }
+            }
+          },
+          {
+            "name": "amount",
+            "type": "u64"
+          },
+          {
+            "name": "timestamp",
+            "type": "i64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "TransactionType",
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "Store"
+          },
+          {
+            "name": "Consume"
+          }
+        ]
+      }
+    }
+  ]
+}
