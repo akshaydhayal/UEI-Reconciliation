@@ -73,6 +73,8 @@ export default function Home() {
     initializeProgram();
   }, [anchorWallet, connection, publicKey]);
   
+  console.log("battery bank data",batteryBankData);
+
   useEffect(() => {
     const fetchAccountData = async () => {
       if (program && batteryBank && producerAccount) {
@@ -174,7 +176,13 @@ export default function Home() {
       //@ts-expect-error ignore
       const formatData = (data) => {
         if (!data) return null;
-      
+      if(title=="Battery Bank Data"){
+        return{
+          ...data,
+          storageFee:data.storageFee.toString(),
+        }
+      }
+
       return {
         ...data,
         producer: data?.producer?.toString(),
@@ -359,18 +367,19 @@ export default function Home() {
             <Card className="bg-gray-800 border-gray-700">
               <CardHeader>
                 <CardTitle className="flex items-center text-blue-400">
-                  <BatteryFull className="mr-2" /> Initialize Battery Bank
+                  <BatteryFull className="mr-2" /> Initialize Battery Bank (One time only)
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <Input
                   type="number"
-                  placeholder="Bank Storage Rate($/kWh)"
+                  placeholder="Battery Bank Storage Rate($/kWh)"
                   value={storageFee}
                   onChange={(e) => setStorageFee(e.target.value)}
                   className="mb-2 bg-gray-700 text-white border-gray-600"
                 />
-                <Button onClick={handleInitialize} disabled={isInitializing} className="bg-blue-600 hover:bg-blue-700 text-white">
+                {/* @ts-expect-error ignore */}
+                <Button onClick={handleInitialize} disabled={isInitializing || batteryBankData} className="bg-blue-600 hover:bg-blue-700 text-white">
                   {isInitializing ? <Loader /> : 'Initialize'}
                 </Button>
               </CardContent>
@@ -389,11 +398,12 @@ export default function Home() {
                   value={storeAmount}
                   onChange={(e) => setStoreAmount(e.target.value)}
                   className="mb-2 bg-gray-700 text-white border-gray-600"
-                />
+                  />
                 <Input
                   type="number"
                   placeholder="Units Charge($/kWh) if used"
                   value={storeRate}
+                  disabled={producerData?true:false}
                   onChange={(e) => setStoreRate(e.target.value)}
                   className="mb-2 bg-gray-700 text-white border-gray-600"
                 />
