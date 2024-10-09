@@ -35,13 +35,5 @@ This solution leverages the energy movement records stored on the Unified Energy
 ## Technologies Used
 
 - **Frontend**: Next.js, React, Recoil, Tailwind CSS, Lucide Icons
-- **Backend**: Next.js
-- **Database**: Solana,
+- **Contract/Ledger**: Solana,
 
-## Setup Instructions
-
-1. Clone the repository:
-
-   ```bash
-   git clone https://github.com/your-username/cudis-mission-project.git
-   cd cudis-mission-project
