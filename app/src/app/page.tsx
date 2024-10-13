@@ -234,8 +234,10 @@ export default function Home() {
             <XAxis dataKey="name" stroke="#a0aec0" />
             <YAxis stroke="#a0aec0" />
             <Tooltip contentStyle={{ backgroundColor: '#2d3748', border: 'none', borderRadius: '4px' }} />
+            {/* <Tooltip contentStyle={{ backgroundColor: '#121212', border: 'none', borderRadius: '4px' }} /> */}
             <Legend />
             <Bar dataKey="energy" fill="#4299e1" />
+            {/* <Bar dataKey="energy" fill="#121212" /> */}
           </BarChart>
         </ResponsiveContainer>
       </CardContent>
@@ -321,12 +323,12 @@ export default function Home() {
               console.log(txType,rate.toString(), total.toString());
               console.log(rate, total);
               return (
-                <TableRow key={index}>
-                  <TableCell className="text-gray-300">{txType}</TableCell>
-                  <TableCell className="text-gray-300">{new BN(tx.amount).toString()}</TableCell>
-                  <TableCell className="text-gray-300">${rate.toString()}</TableCell>
-                  <TableCell className="text-gray-300">${total.toString()}</TableCell>
-                  <TableCell className="text-gray-300">{tx.timestamp}</TableCell>
+                <TableRow key={index} className={`${txType==='Stored Energy' ? 'text-green-400 text-base' : 'text-yellow-400 text-base'}`}>
+                  <TableCell className="">{txType}</TableCell>
+                  <TableCell className="">{new BN(tx.amount).toString()}</TableCell>
+                  <TableCell className="">${rate.toString()}</TableCell>
+                  <TableCell className="">${total.toString()}</TableCell>
+                  <TableCell className="">{tx.timestamp}</TableCell>
                 </TableRow>
               );
             })}
@@ -334,10 +336,10 @@ export default function Home() {
         </Table>
         <div className="mt-4 text-gray-300">
           <h3 className="text-lg font-semibold text-blue-400">Summary</h3>
-          <p>Producers owe Bob (for storage): {totalOwed.toBob.toFixed(0)} $</p>
-          <p>Bob owes Producers (for consumed energy): {totalOwed.toProducers.toFixed(0)} $</p>
-          <p>
-            Net Balance: {Math.abs(totalOwed.toProducers - totalOwed.toBob).toFixed(0)} $ 
+          <p className='text-purple-300'>Producers owe Bob (for storage): ${totalOwed.toBob.toFixed(0)}</p>
+          <p className='text-purple-300'>Bob owes Producers (for consumed energy): ${totalOwed.toProducers.toFixed(0)}</p>
+          <p className='font-medium text-green-300 text-lg'>
+            Net Balance: ${Math.abs(totalOwed.toProducers - totalOwed.toBob).toFixed(0)} 
             {totalOwed.toProducers > totalOwed.toBob 
               ? ' owed to Producers' 
               : ' owed to Bob'}
@@ -450,7 +452,7 @@ export default function Home() {
                 <TransactionList data={producerData} />
               )}
               {batteryBankData && 
-                <div className="flex">
+                <div className="flex gap-16 pl-12">
                   <AccountDataDisplay title="Battery Bank Data" data={batteryBankData} icon={<BatteryFull className="text-blue-400" />} />
                   <AccountDataDisplay title="Producer Account Data" data={producerData} icon={<Zap className="text-yellow-400" />} />
                 </div>
