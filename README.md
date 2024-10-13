@@ -21,7 +21,7 @@ This solution leverages the energy movement records stored on the Unified Energy
 
 *Figure 1: Battery Bank Initialisation.*
 
-![Mission Details](https://github.com/akshaydhayal/UEI-Reconciliation/blob/main/Energy-Storage-Smart-Contract%20(1).png)
+![Mission Details](https://github.com/akshaydhayal/UEI-Reconciliation/blob/main/Energy-Storage-Smart-Contract%20(2).png)
 
 *Figure 2: Detailed view of Transaction History*
 
