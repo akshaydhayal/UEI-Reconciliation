@@ -327,7 +327,7 @@ export default function Home() {
                   <TableCell className="">{txType}</TableCell>
                   <TableCell className="">{new BN(tx.amount).toString()}</TableCell>
                   <TableCell className="">${rate.toString()}</TableCell>
-                  <TableCell className="">${total.toString()}</TableCell>
+                  <TableCell className="">{`${txType==='Stored Energy' ?'+':'-'}`} ${total.toString()}</TableCell>
                   <TableCell className="">{tx.timestamp}</TableCell>
                 </TableRow>
               );
